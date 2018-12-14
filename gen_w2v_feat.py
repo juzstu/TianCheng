@@ -49,8 +49,8 @@ if __name__ == '__main__':
     transaction_train = pd.read_csv(open(data_path+'transaction_train_new.csv', encoding='utf8'))
     tag_train = pd.read_csv(open(data_path+'tag_train_new.csv', encoding='utf8'))
 
-    operation_round2 = pd.read_csv(open(data_path+'test_operation_round2.csv', encoding='utf8'))
-    transaction_round2 = pd.read_csv(open(data_path+'test_transaction_round2.csv', encoding='utf8'))
+    operation_round1 = pd.read_csv(open(data_path+'test_operation_round1.csv', encoding='utf8'))
+    transaction_round1 = pd.read_csv(open(data_path+'test_transaction_round1.csv', encoding='utf8'))
     tag_b = pd.read_csv(open(data_path+'test_tag_r1.csv', encoding='utf8'))[['UID']]
     print('Successed load in train and test data.')
 
@@ -58,8 +58,8 @@ if __name__ == '__main__':
     action_train = operation_train.append(transaction_train).reset_index(drop=True)
     action_train = action_train.merge(tag_train, on='UID')
 
-    transaction_round2['mode'] = 'transaction'
-    action_round2 = operation_round2.append(transaction_round2).reset_index(drop=True)
+    transaction_round1['mode'] = 'transaction'
+    action_round1 = operation_round1.append(transaction_round1).reset_index(drop=True)
 
     trans_feat = ['day', 'time', 'geo_code', 'device1', 'device2', 'device_code1', 'device_code2', 'device_code3',
                   'mac1', 'wifi', 'mac2', 'ip1', 'ip2', 'merchant', 'code1', 'code2', 'acc_id1', 'acc_id2', 'acc_id3',
@@ -67,7 +67,7 @@ if __name__ == '__main__':
                   'amt_src1', 'amt_src2', 'mode']
 
     new_all_train = w2v_feat(action_train, trans_feat, 'train')
-    new_all_test = w2v_feat(action_round2, trans_feat, 'test')
+    new_all_test = w2v_feat(action_round1, trans_feat, 'test')
     train = pd.merge(tag_train, new_all_train, on='UID', how='left')
     valid = pd.merge(tag_b, new_all_test, on='UID', how='left')
     print(f'Gen train shape: {train.shape}, test shape: {valid.shape}')
